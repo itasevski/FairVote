@@ -43,14 +43,14 @@ App = {
     // Load contract data
     App.contracts.Election.deployed().then(function(instance) {
       electionInstance = instance;
-      return electionInstance.candidatesCount();
+      return electionInstance.getCandidatesCount();
     }).then(function(candidatesCount) {
       var candidatesResults = $("#candidatesResults");
       candidatesResults.empty();
       var candidatesSelect = $('#candidatesSelect');
       candidatesSelect.empty();
       for (var i = 1; i <= candidatesCount; i++) {
-        electionInstance.candidates(i).then(function(candidate) {
+        electionInstance.getCandidateJS(i).then(function(candidate) {
           var id = candidate[0];
           var name = candidate[1];
           var voteCount = candidate[2];
@@ -62,7 +62,7 @@ App = {
           candidatesSelect.append(candidateOption);
         });
       }
-      return electionInstance.voters(App.account);
+      return electionInstance.getVoter(App.account);
     }).then(function(hasVoted) {
       // Do not allow a user to vote
       if(hasVoted) {

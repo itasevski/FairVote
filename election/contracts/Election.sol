@@ -1,4 +1,5 @@
 pragma solidity ^0.5.4;
+pragma experimental ABIEncoderV2;
 
 contract Election {
     // Candidate struct
@@ -9,12 +10,11 @@ contract Election {
     }
 
     // Candidates mapping - contains every presidential candidate
-    mapping(uint => Candidate) public candidates;
+    mapping(uint => Candidate) private candidates;
     // Number of presidential candidates
-    uint public candidatesCount;
-
+    uint private candidatesCount;
     // Voters mapping - contains every user that has voted
-    mapping(address => bool) public voters;
+    mapping(address => bool) private voters;
 
     // Public constructor - adds the candidates
     constructor() public {
@@ -39,6 +39,28 @@ contract Election {
         voters[msg.sender] = true;
 
         candidates[_candidateId].voteCount++;
+    }
+
+    // Getter function for a specific candidate
+    function getCandidate(uint candidateId) public view returns (Candidate memory) {
+        return candidates[candidateId];
+    }
+
+    // Getter function for a specific candidate in tuple format
+    function getCandidateJS(uint candidateID) public view returns (uint, string memory, uint) {
+        Candidate memory c = candidates[candidateID];
+
+        return (c.id, c.name, c.voteCount);
+    }
+
+    // Getter function for the number of candidates
+    function getCandidatesCount() public view returns (uint) {
+        return candidatesCount;
+    }
+
+    // Getter function for a specific voter
+    function getVoter(address voterAddress) public view returns (bool) {
+        return voters[voterAddress];
     }
 
 }
